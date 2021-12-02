@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import ReminderItem from "./ReminderItem";
-import { View, TextInput, Button, StyleSheet } from 'react-native';
+import { View, TextInput, Button, StyleSheet, Modal } from 'react-native';
 
 const ReminderInput = props => {
     const [enteredReminder, setEnteredReminder] = useState('');
@@ -9,31 +8,61 @@ const ReminderInput = props => {
         setEnteredReminder(enteredText);
     };
 
+    const addReminderHandler = () => {
+        props.onAddReminder(enteredReminder);
+        setEnteredReminder('');
+    };
+
     return (
-        <View style={styles.inputContainer}>
-            <TextInput
-                placeholder="Reminder"
-                style={styles.inputText}
-                onChangeText={reminderInputHandler}
-                value={enteredReminder}
-            />
-            <Button title="ADD" onPress={props.onAddReminder.bind(this, enteredReminder)} />
-        </View>
+        <Modal visible={props.visible} animationType="slide">
+            <View style={styles.inputContainer}>
+                <TextInput
+                    placeholder="Reminder"
+                    style={styles.inputText}
+                    onChangeText={reminderInputHandler}
+                    value={enteredReminder}
+                />
+                <View style={styles.inputButton}>
+                    <View style={styles.button}>
+                        <Button
+                            title="CANCEL"
+                            color="red"
+                            onPress={props.onCancel}
+                        />
+                    </View>
+                    <View style={styles.button}>
+                        <Button
+                            title="ADD"
+                            onPress={addReminderHandler}
+                        />
+                    </View>
+                </View>
+            </View>
+        </Modal >
     );
 };
 
 const styles = StyleSheet.create({
     inputContainer: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
+        flex: 1,
+        justifyContent: 'center',
         alignItems: 'center'
     },
     inputText: {
         width: '80%',
         borderColor: 'black',
         borderWidth: 1,
-        padding: 10
+        padding: 10,
+        marginBottom: 10
     },
+    inputButton: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        width: '60%'
+    },
+    button: {
+        width: '40%'
+    }
 });
 
 export default ReminderInput;
